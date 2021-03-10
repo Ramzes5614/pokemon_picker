@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:test_project/models/model_for_db.dart';
 import 'package:test_project/models/pokemon_model.dart';
 import 'package:test_project/repos/database.dart';
+import 'package:test_project/screens/pokemon_view_screen.dart';
 
 class QuerriesListScreen extends StatefulWidget {
   @override
@@ -16,37 +16,45 @@ class _QuerriesListScreenState extends State<QuerriesListScreen> {
         title: Text("Мои запросы"),
         centerTitle: true,
       ),
-      body: Center(
-          child: FutureBuilder<List<ModelForDB>>(
-              future: getList(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.separated(
-                      itemBuilder: (BuildContext context, ind) {
-                        return Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("${snapshot.data[ind].id}"),
-                              Text("${snapshot.data[ind].name}"),
-                              Text("${snapshot.data[ind].image}"),
-                            ],
-                          ),
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, ind) {
-                        return Divider();
-                      },
-                      itemCount: snapshot.data.length);
-                } else {
-                  return Container();
-                }
-              })),
+      body: Container(
+        padding: EdgeInsets.fromLTRB(25, 0, 25, 0),
+        child: Center(
+            child: FutureBuilder<List<PokemonModel>>(
+                future: getList(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.separated(
+                        itemBuilder: (BuildContext context, ind) {
+                          return GestureDetector(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => PokemonViewScreen(pokemonModel: snapshot.data[ind])));
+                            },
+                               child: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("${snapshot.data[ind].id}"),
+                                  Text("${snapshot.data[ind].name}"),
+                                  Text("${snapshot.data[ind].image}"),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                        separatorBuilder: (BuildContext context, ind) {
+                          return Divider();
+                        },
+                        itemCount: snapshot.data.length);
+                  } else {
+                    return Container();
+                  }
+                })),
+      ),
     );
   }
 
-  Future<List<ModelForDB>> getList() async {
-    List<ModelForDB> _list = await DBProvider.db.getAllClients();
+  Future<List<PokemonModel>> getList() async {
+    List<PokemonModel> _list = await DBProvider.db.getAllClients();
     return _list;
   }
 }

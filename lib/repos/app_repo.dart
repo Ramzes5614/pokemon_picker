@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
-import 'package:test_project/models/model_for_db.dart';
 import 'package:test_project/models/responses.dart';
-
 import 'database.dart';
 
 class AppRepository {
@@ -11,11 +9,19 @@ class AppRepository {
 
   Future<PokemonResponse> getPokemonById() async {
     int rnd = Random().nextInt(800);
+    var pokemon = await DBProvider.db.getPokemonById(rnd);
+    if(pokemon!=null){
+      return PokemonResponseOK.fromPokemon(pokemon);
+    }
     var response = _getByUrl(mainUrl + '/pokemon/$rnd');
     return response;
   }
 
   Future<PokemonResponse> getPokemonByName(String name) async {
+    var pokemon = await DBProvider.db.getPokemonByName(name);
+    if(pokemon!=null){
+      return PokemonResponseOK.fromPokemon(pokemon);
+    }
     var response = _getByUrl(mainUrl + '/pokemon/' + name);
     return response;
   }
@@ -27,10 +33,7 @@ class AppRepository {
         var data = jsonDecode(response.body);
         print(data);
         PokemonResponse resp = PokemonResponseOK(response.body);
-        await DBProvider.db.newQuerry(ModelForDB(
-            id: resp.pokemon.id,
-            name: resp.pokemon.name,
-            image: resp.pokemon.sprites.other.dreamWorld.frontDefault));
+        await DBProvider.db.addPokemon(resp.pokemon);
         return resp;
       } else {
         throw Exception("Проблема с сетью");

@@ -25,6 +25,7 @@ class PokemonResponseLoading extends PokemonResponse {}
 
 class PokemonResponseOK extends PokemonResponse {
   PokemonResponseOK(var data) : super.fromJson(data);
+  PokemonResponseOK.fromPokemon(PokemonModel pokemon):super(pokemon: pokemon, err: "");
 }
 
 class PokemonResponseWithError extends PokemonResponse {

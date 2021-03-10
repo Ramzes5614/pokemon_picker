@@ -35,7 +35,7 @@ class _MenuScreenState extends State<MenuScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Spacer(
-                flex: 3,
+                flex: 2,
               ),
               GestureDetector(
                 onTap: () {

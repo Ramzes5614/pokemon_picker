@@ -111,10 +111,10 @@ class PokemonCardWidget extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          pokemon.sprites.other.dreamWorld.frontDefault == null
+          pokemon.image == null
               ? Container()
               : SvgPicture.network(
-                  pokemon.sprites.other.dreamWorld.frontDefault,
+                  pokemon.image,
                   height: 400,
                 )
         ],
